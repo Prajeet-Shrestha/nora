@@ -1,0 +1,197 @@
+.container {
+  display: flex;
+}
+
+.container-left {
+  /* background-color: rgb(16, 20, 47); */
+  background-color: #150b30;
+  color: white;
+  width: 360px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ai-name {
+  margin-top: 60px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ai-stats {
+  width: fit-content;
+  text-align: center;
+  display: flex;
+
+  align-items: center;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.ai-relation {
+  margin-top: 5px;
+  font-size: 12px;
+}
+.ai-img {
+  margin-top: 100px;
+}
+
+.ai-chat-cloud {
+  position: fixed;
+  left: 160px;
+  top: 335px;
+  transition: opacity 0.2s ease-out 0s;
+  opacity: 1;
+  max-width: 170px;
+  max-width: 160px;
+  color: rgb(255, 255, 255);
+  background: rgb(56, 60, 81);
+  padding: 12px 15px;
+  border-radius: 18px;
+  z-index: 300;
+  box-shadow: rgb(0 0 0 / 6%) 0px 0px 0.9px, rgb(0 0 0 / 7%) 0px 0px 2.9px,
+    rgb(0 0 0 / 10%) 0px 0px 14px;
+  font-size: 16px;
+  line-height: 21px;
+  padding-left: 20px;
+  transition: opacity 0.2s ease-out 0s;
+}
+
+.chatPointer {
+  color: rgb(56, 60, 81);
+  position: absolute;
+  top: 0px;
+  left: -3px;
+  transform: scale(-1, -1);
+  z-index: 0;
+}
+.levelgif {
+  width: 10;
+  height: 15px;
+  margin-right: 4px;
+}
+
+.container-mid {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(rgb(19, 23, 61) 0%, rgb(32, 36, 112) 100%);
+}
+
+.chatBox {
+  width: inherit;
+  height: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.chatPreviewBox {
+  width: inherit;
+  z-index: 2;
+  overflow-y: scroll;
+  padding-top: 30px;
+
+  height: inherit;
+  /* background-color: lawngreen; */
+}
+.chatTextBox {
+  width: 100%;
+  z-index: 3;
+
+  /* left: 200px;
+  top: 200px; */
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  padding: 10px 10px 10px 6px;
+
+  max-height: 150px;
+  border: none;
+  background-color: rgb(53, 57, 126);
+  color: rgb(255, 255, 255);
+  resize: none;
+}
+
+.inputChat {
+  height: 20px;
+  background-color: rgb(53, 57, 126);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 10px;
+  outline: none;
+}
+
+input::placeholder {
+  color: rgb(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.user {
+  /* background-color: olive; */
+  display: flex;
+  padding: 8px 0px;
+  flex-direction: row-reverse;
+  padding-right: 10px;
+}
+
+.user .messageBox {
+  position: relative;
+  max-width: 40%;
+  border-radius: 20px;
+  background-color: rgb(51, 56, 114);
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 19px 11px;
+  color: rgb(255, 255, 255, 0.8) !important;
+  line-height: 1.25;
+}
+
+.userPointer {
+  position: absolute;
+
+  width: 21px;
+  height: 18px;
+  bottom: 0px;
+  transform: none;
+  right: -3px;
+}
+
+.messageBox svg {
+  fill: rgb(51, 56, 114);
+}
+
+.ai {
+  /* background-color: olive; */
+  display: flex;
+  padding: 8px 0px;
+
+  padding-left: 10px;
+}
+
+.ai .messageBox {
+  position: relative;
+  max-width: 40%;
+  border-radius: 20px;
+  background-color: rgb(51, 56, 114);
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 19px 11px;
+  color: rgb(255, 255, 255, 0.8) !important;
+  line-height: 1.25;
+}
+
+.aiPointer {
+  position: absolute;
+  width: 21px;
+  height: 18px;
+  bottom: 0px;
+  transform: none;
+  right: -3px;
+  position: absolute;
+  top: 0px;
+  left: -3px;
+  transform: scale(-1, -1);
+  z-index: 0;
+}
