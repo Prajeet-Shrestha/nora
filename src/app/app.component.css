@@ -50,8 +50,7 @@
   padding: 12px 15px;
   border-radius: 18px;
   z-index: 300;
-  box-shadow: rgb(0 0 0 / 6%) 0px 0px 0.9px, rgb(0 0 0 / 7%) 0px 0px 2.9px,
-    rgb(0 0 0 / 10%) 0px 0px 14px;
+  box-shadow: rgb(0 0 0 / 6%) 0px 0px 0.9px, rgb(0 0 0 / 7%) 0px 0px 2.9px, rgb(0 0 0 / 10%) 0px 0px 14px;
   font-size: 16px;
   line-height: 21px;
   padding-left: 20px;
@@ -194,4 +193,19 @@ input::placeholder {
   left: -3px;
   transform: scale(-1, -1);
   z-index: 0;
+}
+
+.innputBox,
+.innputBox input {
+  width: 100%;
+}
+
+.mic svg {
+  cursor: pointer;
+  fill: rgb(171, 171, 171);
+}
+
+.mic svg.on {
+  cursor: pointer;
+  fill: white;
 }
