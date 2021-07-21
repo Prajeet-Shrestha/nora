@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import Speech from './services/speech.js';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title = 'nora';
   chatObjects = [
     {
@@ -21,6 +21,22 @@ export class AppComponent {
     xp: 10,
     mood: 'Sad',
   };
+  ModuleSpeech;
+  constructor() {}
+
+  ngAfterViewInit() {
+    this.ModuleSpeech = new Speech();
+  }
+  speech = false;
+  toggleSpeech() {
+    this.speech = this.speech ? false : true;
+    if (this.speech) {
+      this.ModuleSpeech.start();
+    } else {
+      this.ModuleSpeech.stop();
+    }
+  }
+
   @ViewChild('chatInput') chatInput;
   addUserMessage(value) {
     console.log(value);
@@ -31,7 +47,9 @@ export class AppComponent {
         date: new Date().getSeconds(),
       });
       console.log(this.chatInput);
-      this.chatInput.nativeElement.value = '';
+      if (!this.speech) {
+        this.chatInput.nativeElement.value = '';
+      }
     }
   }
 }
