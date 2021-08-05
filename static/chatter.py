@@ -8,7 +8,7 @@ import tensorflow as tf
 
 
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('intents.json').read())
+intents = json.loads(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora/static/intents.json').read())
 
 words = []
 classes = []

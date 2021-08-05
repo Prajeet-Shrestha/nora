@@ -1,23 +1,56 @@
-{"intents": [
+{
+  "intents": [
     {
-        "tag": "chat_greetings",
-        "patterns": ["Hi", "Hello", "Hey", "Nora", "Good day", "Afternoon", "Morning", "Evening", "Whats up"],
-        "responses": ["Hello!", "What can I do for you?", "How can I hep you?", "Tell me what you need.", "What do you need?"]
+      "tag": "chat_greetings",
+      "patterns": ["Hi", "Hello", "Hey", "Nora", "Good day", "Afternoon", "Morning", "Evening", "Whats up"],
+      "responses": ["Hello!", "What can I do for you?", "How can I hep you?"]
     },
     {
-        "tag": "chat_goodbye",
-        "patterns": ["Bye", "See you later", "Thanks for the help", "I will be back soon", "Farewell", "Talk to you later", "Until next time", "Till we meet again"],
-        "responses": ["Bye!", "Have a nice day.", "Call me as soon as you need something.", "I am always here to help.", "Thanks for talking to me."]
+      "tag": "chat_goodbye",
+      "patterns": [
+        "Bye",
+        "See you later",
+        "Thanks for the help",
+        "be back soon",
+        "Farewell",
+        "Talk to you later",
+        "Until next time",
+        "till we meet again"
+      ],
+      "responses": [
+        "Bye!",
+        "Have a nice day.",
+        "Call me as soon as you need something.",
+        "I am always here to help.",
+        "Thanks for talking to me."
+      ]
     },
     {
-        "tag": "task_add_withdraw",
-        "patterns": ["I just withdrew from bank", "I took money from my account", "I just used ATM", "I took some money from bank", "My account has less money now", "I used my savings"],
-        "responses": ["Understood. Please provide me the details.", "Please provide me the details", "Okay. I will insert it to my database. Please provide me the details."]
+      "tag": "task_add_withdraw",
+      "patterns": [
+        "withdraw from bank",
+        "take money",
+        "used ATM",
+        "take cash",
+        "withdraw money",
+        "use my savings",
+        "get cash",
+        "get money"
+      ],
+      "responses": [
+        "Understood. Please provide me the details.",
+        "Please provide me the details",
+        "Okay. I will insert it to my database. Please provide me the details."
+      ]
     },
     {
-        "tag": "task_add_deposit",
-        "patterns": ["I just deposited some money", "I put some money into my account", "My account has more money now", "I just got richer", "I saved some money"],
-        "responses": ["Understood. Please provide me the details.", "Please provide me the details", "Okay. I will insert it to my database. Please provide me the details."]
+      "tag": "task_add_deposit",
+      "patterns": ["deposit money", "put money", "insert cash", "deposit cash", "save money"],
+      "responses": [
+        "Understood. Please provide me the details.",
+        "Please provide me the details",
+        "Okay. I will insert it to my database. Please provide me the details."
+      ]
     }
-]
+  ]
 }
