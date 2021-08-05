@@ -10,6 +10,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -65,10 +66,56 @@ class Chat(Resource):
             'status': 'success',
             'data': {'intent': res[0], 'response': res[1]}
             })
-        
+
+
+class Withdraw(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        content = request.json
+        self.db.withdraws.insert_one({
+                    "phoneno": content['phoneno'],
+                    "amount": float(content['amount']),
+                    "date": datetime.datetime.now(),
+                    "purpose": content['purpose']
+                })
+        return jsonify({
+            'status': 'success',
+            'data': {
+                'task': 'add_withdraw',
+                'message': 'Data inserted to database'
+            }
+})
+
+
+class Deposit(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        content = request.json
+        self.db.deposits.insert_one({
+                    "phoneno": content['phoneno'],
+                    "amount": float(content['amount']),
+                    "date": datetime.datetime.now(),
+                    "purpose": content['purpose']
+                })
+        return jsonify({
+            'status': 'success',
+            'data': {
+                'task': 'add_deposit',
+                'message': 'Data inserted to database'
+            }
+        })
+
    
 api.add_resource(Chat, "/chat")
+api.add_resource(Withdraw, "/withdraw")
+api.add_resource(Deposit, "/deposit")
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
