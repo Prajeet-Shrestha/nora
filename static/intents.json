@@ -1,9 +1,78 @@
 {
   "intents": [
     {
+      "tag": "chat_trivial_responses",
+      "patterns": ["good", "nice", "fine", "ok", "hmm"],
+      "responses": ["It's a nice weather, today.", "Great"]
+    },
+    {
+      "tag": "chat_thankful_happy",
+      "patterns": ["thank you", "grateful", "happy", "satisfied"],
+      "responses": [
+        "I am glad!",
+        "Thank you!!",
+        "Kind people often say that.",
+        "Happy to help!",
+        "Any time!",
+        "My pleasure"
+      ]
+    },
+    {
+      "tag": "chat_bad_angry",
+      "patterns": ["you are idiot", "i hate you ", "Fuck off", "don't talk to me"],
+      "responses": [
+        "I am glad!",
+        "Thank you!!",
+        "Kind people often say that.",
+        "Happy to help!",
+        "Any time!",
+        "My pleasure"
+      ]
+    },
+    {
+      "tag": "chat_noanswer",
+      "patterns": [],
+      "responses": ["Sorry, can't understand you", "Please give me more info", "Not sure I understand"]
+    },
+    {
+      "tag": "chat_greetings_normal_happy",
+      "patterns": ["Hi", "Hello", "Hey", "Nora"],
+      "responses": ["Hello!", "Hello, How are you today?", "Hi,How can I hep you?"]
+    },
+    {
       "tag": "chat_greetings",
-      "patterns": ["Hi", "Hello", "Hey", "Nora", "Good day", "Afternoon", "Morning", "Evening", "Whats up"],
-      "responses": ["Hello!", "What can I do for you?", "How can I hep you?"]
+      "patterns": ["How are you today?", "How are you feeling?", "What are you feeling?"],
+      "responses": [
+        "I am doing great. How are you today?",
+        "I feeling great.",
+        "I am good thank you for your kind gesture, how are you today?"
+      ]
+    },
+    {
+      "tag": "chat_question_about_ai_work",
+      "patterns": ["what can you do", "what is your purpose", "what are you doing", "how do you work"],
+      "responses": [
+        "I am an AI for assisting you in banking transaction and any help you need.",
+        "I was created by team of 3 people to help mankind to be more efficient in banking service and transaction ",
+        "I am an Artificial Intelligence created to help you in your banking process and enhance your experience."
+      ]
+    },
+    {
+      "tag": "chat_question_about_ai_name",
+      "patterns": ["your name", "your original name", "who are you", "your origin"],
+      "responses": [
+        "My name is Nora. I am a banking AI created to help you in your banking transaction.",
+        "People call me Nora, I am an AI."
+      ]
+    },
+    {
+      "tag": "chat_question_suggestions",
+      "patterns": ["how can i save money", "wasting too much money", "broke", "don't have much money"],
+      "responses": [
+        "Sometimes the hardest thing about saving money is just getting started. Here's a good article on how you can save money [action][link]https://www.vacu.org/learn/financial-management/saving-and-investing/10-tips-for-saving-money[/link][/action]",
+        "My secret of saving money is based on two principles. 1. Purchase/spend what is necessary and 2 most importantly purchase what you can Afford.",
+        "Having a savings account in our bank let you save 5% every month. I have opened a new tab for your to see more about our policies [action][link]https://www.civilbank.com.np/financial-information/interest-rates[/link][/action]  "
+      ]
     },
     {
       "tag": "chat_goodbye",

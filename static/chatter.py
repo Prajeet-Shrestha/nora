@@ -8,7 +8,7 @@ import tensorflow as tf
 
 
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora/static/intents.json').read())
+intents = json.loads(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/intents.json').read())
 
 words = []
 classes = []
@@ -63,4 +63,4 @@ adam = tf.keras.optimizers.SGD(lr=0.1)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=4, verbose=1)
-model.save('nora_model.h5', hist)
+model.save('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/nora_model.h5', hist)
