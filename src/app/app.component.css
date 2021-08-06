@@ -263,3 +263,85 @@ input::placeholder {
 .tidot:nth-child(3) {
   -webkit-animation-delay: 400ms;
 }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    display: block;
+  }
+
+  .container-left {
+    /* background-color: rgb(16, 20, 47); */
+    background-color: var(--leftNavBackground);
+    color: white;
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .ai-name {
+    margin: 0 auto;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .ai-stats {
+    width: fit-content;
+    text-align: center;
+    display: flex;
+
+    align-items: center;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .ai-relation {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  .ai-img {
+    margin-top: 0px;
+  }
+  .ai-chat-cloud.hide-opacity {
+    opacity: 0;
+  }
+
+  .ai-chat-cloud {
+    position: fixed;
+    left: 200px;
+    top: 80px;
+    transition: opacity 0.2s ease-out 0s;
+    opacity: 1;
+    max-width: 170px;
+    max-width: 160px;
+    color: rgb(255, 255, 255);
+    background: rgb(56, 60, 81);
+    padding: 12px 15px;
+    border-radius: 18px;
+    z-index: 300;
+    box-shadow: rgb(0 0 0 / 6%) 0px 0px 0.9px, rgb(0 0 0 / 7%) 0px 0px 2.9px, rgb(0 0 0 / 10%) 0px 0px 14px;
+    font-size: 16px;
+    line-height: 21px;
+    padding-left: 20px;
+
+    -webkit-transition: opacity 3s ease-in-out;
+    -moz-transition: opacity 3s ease-in-out;
+    -ms-transition: opacity 3s ease-in-out;
+    -o-transition: opacity 3s ease-in-out;
+    opacity: 0.8;
+  }
+
+  .chatPointer {
+    color: rgb(56, 60, 81);
+    position: absolute;
+    top: 0px;
+    left: -3px;
+    transform: scale(-1, -1);
+    z-index: 0;
+  }
+  .levelgif {
+    width: 10;
+    height: 15px;
+    margin-right: 4px;
+  }
+}

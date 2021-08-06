@@ -12,11 +12,11 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('aiAvatar') aiAvatar;
 
   title = 'nora';
-  cloudDialogBox = 'Hello, I am Nora, Your Banking Assistance. Anyways, I am currently offline.';
+  cloudDialogBox = 'Hello, I am Nora,';
   chatObjects = [
     {
       type: 'ai',
-      message: 'Hello, I am Nora, Your Banking Assistance.',
+      message: 'Hello, I am Nora, Your Banking Assistance. Anyways, I am currently offline.',
       date: 0,
     },
   ];
