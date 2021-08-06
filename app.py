@@ -57,7 +57,7 @@ class Chat(Resource):
                 break
         return result
 
-    def get(self):
+    def post(self):
         content = request.json
         message = content['message']
         ints = self.predict_class(message)
@@ -68,7 +68,7 @@ class Chat(Resource):
             })
 
 
-class Withdraw(Resource):
+class AddWithdraw(Resource):
     def __init__(self):
         self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
         self.db = self.client.noradb
@@ -90,7 +90,7 @@ class Withdraw(Resource):
 })
 
 
-class Deposit(Resource):
+class AddDeposit(Resource):
     def __init__(self):
         self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
         self.db = self.client.noradb
@@ -113,8 +113,8 @@ class Deposit(Resource):
 
    
 api.add_resource(Chat, "/chat")
-api.add_resource(Withdraw, "/withdraw")
-api.add_resource(Deposit, "/deposit")
+api.add_resource(AddWithdraw, "/addwithdraw")
+api.add_resource(AddDeposit, "/adddeposit")
 
 
 if __name__ == '__main__':
