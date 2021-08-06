@@ -20,6 +20,18 @@ class Speech {
           ele.setAttribute('value', currentText + ' ' + val);
           console.log();
         },
+        'hi *val': function (val) {
+          var ele = document.getElementById('chatInput');
+          var currentText = ele.value;
+          ele.setAttribute('value', currentText + ' ' + val);
+          console.log();
+        },
+        'hey *val': function (val) {
+          var ele = document.getElementById('chatInput');
+          var currentText = ele.value;
+          ele.setAttribute('value', currentText + ' ' + val);
+          console.log();
+        },
         'continue message *val': function (val) {
           var ele = document.getElementById('chatInput');
           var currentText = ele.value;
@@ -36,6 +48,12 @@ class Speech {
           var ele = document.getElementById('chatInput');
           console.log(ele);
           ele.setAttribute('value', '');
+        },
+        '*val': function (val) {
+          var ele = document.getElementById('chatInput');
+          var currentText = ele.value;
+          ele.setAttribute('value', currentText + ' ' + val);
+          console.log();
         },
       };
       annyang.addCommands(commands);

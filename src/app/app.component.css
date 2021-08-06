@@ -6,7 +6,7 @@
   /* background-color: rgb(16, 20, 47); */
   background-color: var(--leftNavBackground);
   color: white;
-  width: 360px;
+  width: 310px;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -14,7 +14,7 @@
 }
 
 .ai-name {
-  margin-top: 60px;
+  margin-top: 10px;
   font-size: 24px;
   font-weight: 600;
 }
@@ -34,13 +34,16 @@
   font-size: 12px;
 }
 .ai-img {
-  margin-top: 100px;
+  margin-top: 50px;
+}
+.ai-chat-cloud.hide-opacity {
+  opacity: 0;
 }
 
 .ai-chat-cloud {
   position: fixed;
   left: 160px;
-  top: 335px;
+  top: 150px;
   transition: opacity 0.2s ease-out 0s;
   opacity: 1;
   max-width: 170px;
@@ -54,7 +57,12 @@
   font-size: 16px;
   line-height: 21px;
   padding-left: 20px;
-  transition: opacity 0.2s ease-out 0s;
+
+  -webkit-transition: opacity 3s ease-in-out;
+  -moz-transition: opacity 3s ease-in-out;
+  -ms-transition: opacity 3s ease-in-out;
+  -o-transition: opacity 3s ease-in-out;
+  opacity: 0.8;
 }
 
 .chatPointer {
