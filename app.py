@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
+from flask_cors import CORS, cross_origin
 import pymongo
 import datetime
 import random
@@ -13,6 +14,8 @@ from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 api = Api(app)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 class Chat(Resource):
