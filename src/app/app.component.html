@@ -88,6 +88,34 @@
           </div>
         </div>
       </div>
+
+      <div class="typing-in" *ngIf="loading">
+        <div class="ai">
+          <div class="messageBox">
+            <div class="ticontainer">
+              <div class="tiblock">
+                <div class="tidot"></div>
+                <div class="tidot"></div>
+                <div class="tidot"></div>
+              </div>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 20"
+              width="24"
+              height="20"
+              fill="currentColor"
+              align="right"
+              class="aiPointer"
+            >
+              <path
+                d="M11.92 16.062A19.91 19.91 0 0 1 0 20V0h20c0 7.668-.155 16.282 4 20-5.176-.054-9.12-1.727-12.08-3.938z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
       <div class="chatTextBox">
         <div class="mic" (click)="toggleSpeech()">
           <svg

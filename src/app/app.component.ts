@@ -15,7 +15,7 @@ export class AppComponent implements AfterViewInit {
       date: 0,
     },
   ];
-
+  loading: boolean = false;
   nora = {
     level: 1,
     xp: 10,

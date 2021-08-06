@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --chatPreviewBackground: rgb(3, 18, 93);
+  /* --chatPreviewBackground: linear-gradient(rgb(19, 23, 61) 0%, rgb(32, 36, 112) 100%); */
+  --leftNavBackground: #150b30;
+}
+
 html,
 body {
   width: 100%;
