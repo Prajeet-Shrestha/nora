@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS, cross_origin
+import re
 import pymongo
 import datetime
 import random
@@ -81,20 +82,40 @@ class AddWithdraw(Resource):
         self.db = self.client.noradb
 
     def post(self):
-        content = request.json
-        self.db.withdraws.insert_one({
-                    "phoneno": content['phoneno'],
-                    "amount": float(content['amount']),
-                    "date": datetime.datetime.now(),
-                    "purpose": content['purpose']
-                })
-        return jsonify({
-            'status': 'success',
-            'data': {
-                'task': 'add_withdraw',
-                'message': 'Data inserted to database'
-            }
-})
+        try:
+            content = request.json
+            assert re.match("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", content['phoneno'])
+            assert isinstance(content['amount'], float)
+            assert len(content['purpose'] > 0) and not content['purpose'].isspace()
+            self.db.withdraws.insert_one({
+                        "phoneno": content['phoneno'],
+                        "amount": float(content['amount']),
+                        "date": datetime.datetime.now(),
+                        "purpose": content['purpose']
+                    })
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'task': 'add_withdraw',
+                    'message': 'Data inserted to database'
+                }
+            })
+        except AssertionError:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'add_withdraw',
+                    'message': 'Invalid data'
+                }
+            })
+        except Exception:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'add_withdraw',
+                    'message': 'Network error'
+                }
+            })
 
 
 class AddDeposit(Resource):
@@ -104,20 +125,40 @@ class AddDeposit(Resource):
         self.db = self.client.noradb
 
     def post(self):
-        content = request.json
-        self.db.deposits.insert_one({
-                    "phoneno": content['phoneno'],
-                    "amount": float(content['amount']),
-                    "date": datetime.datetime.now(),
-                    "purpose": content['purpose']
-                })
-        return jsonify({
-            'status': 'success',
-            'data': {
-                'task': 'add_deposit',
-                'message': 'Data inserted to database'
-            }
-        })
+        try:
+            content = request.json
+            assert re.match("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", content['phoneno'])
+            assert isinstance(content['amount'], float)
+            assert len(content['purpose'] > 0) and not content['purpose'].isspace()
+            self.db.deposits.insert_one({
+                        "phoneno": content['phoneno'],
+                        "amount": float(content['amount']),
+                        "date": datetime.datetime.now(),
+                        "purpose": content['purpose']
+                    })
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'task': 'add_deposit',
+                    'message': 'Data inserted to database'
+                }
+            })
+        except AssertionError:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'add_deposit',
+                    'message': 'Invalid data'
+                }
+            })
+        except Exception:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'add_deposit',
+                    'message': 'Network error'
+                }
+            })
 
    
 api.add_resource(Chat, "/chat")
