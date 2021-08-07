@@ -1,9 +1,23 @@
 {
   "intents": [
     {
-      "tag": "chat_trivial_responses",
+      "tag": "chat_trivialResponses1",
       "patterns": ["good", "nice", "fine", "ok", "hmm"],
       "responses": ["It's a nice weather, today.", "Great"]
+    },
+    {
+      "tag": "chat_trivialResponses2",
+      "patterns": ["yea", "hehe", "yes", "ok", "hmm"],
+      "responses": ["Hehe", "Yes!", "I am very new to human language, i hope you will like me."]
+    },
+    {
+      "tag": "chat_userName",
+      "patterns": ["my name is", "name is", "i am", "i am called", "its me"],
+      "responses": [
+        "Nice to meet you, I am Nora. you have a really beautiful name",
+        "I am glad to meet you, My name is Nora.",
+        "My name is Nora, You have a good name."
+      ]
     },
     {
       "tag": "chat_thankful_happy",
@@ -40,7 +54,7 @@
       "responses": ["Hello!", "Hello, How are you today?", "Hi,How can I hep you?"]
     },
     {
-      "tag": "chat_greetings",
+      "tag": "chat_greetings_question_happy",
       "patterns": ["How are you today?", "How are you feeling?", "What are you feeling?"],
       "responses": [
         "I am doing great. How are you today?",
@@ -69,9 +83,9 @@
       "tag": "chat_question_suggestions",
       "patterns": ["how can i save money", "wasting too much money", "broke", "don't have much money"],
       "responses": [
-        "Sometimes the hardest thing about saving money is just getting started. Here's a good article on how you can save money [action][link]https://www.vacu.org/learn/financial-management/saving-and-investing/10-tips-for-saving-money[/link][/action]",
+        "Sometimes the hardest thing about saving money is just getting started. Here's a good article on how you can save money (action)(link)https://www.vacu.org/learn/financial-management/saving-and-investing/10-tips-for-saving-money(/link)(/action)",
         "My secret of saving money is based on two principles. 1. Purchase/spend what is necessary and 2 most importantly purchase what you can Afford.",
-        "Having a savings account in our bank let you save 5% every month. I have opened a new tab for your to see more about our policies [action][link]https://www.civilbank.com.np/financial-information/interest-rates[/link][/action]  "
+        "Having a savings account in our bank let you save 5% every month. I have opened a new tab for your to see more about our policies (action)(link)https://www.civilbank.com.np/financial-information/interest-rates(/link)(/action)"
       ]
     },
     {

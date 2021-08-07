@@ -28,8 +28,8 @@ words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_lett
 words = sorted(set(words))
 classes = sorted(set(classes))
 
-pickle.dump(words, open('words.pkl', 'wb'))
-pickle.dump(classes, open('classes.pkl', 'wb'))
+pickle.dump(words, open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/words.pkl', 'wb'))
+pickle.dump(classes, open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/classes.pkl', 'wb'))
 
 training = []
 output_empty = [0] * len(classes)
