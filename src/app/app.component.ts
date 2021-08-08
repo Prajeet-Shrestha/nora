@@ -1,7 +1,9 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import Speech from './services/speech.js';
 import { ChatService } from '../app/services/chat/chat.service';
+import { LevelingService } from './services/leveling/leveling.service';
 import { emotionImg } from '../app/services/exports/emotions-img';
+import { UtilService } from './services/util/util.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,11 +14,11 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('aiAvatar') aiAvatar;
 
   title = 'nora';
-  cloudDialogBox = 'Hello, I am Nora,';
+  cloudDialogBox = "I hope you're taking good care of yourself!";
   chatObjects = [
     {
       type: 'ai',
-      message: 'Hello, I am Nora, Your Banking Assistance. Anyways, I am currently offline.',
+      message: 'Hello, I am Nora, Your Banking Assistance.',
       date: 0,
     },
   ];
@@ -44,21 +46,43 @@ export class AppComponent implements AfterViewInit {
     mood: 'Sad',
   };
   ModuleSpeech;
-  constructor(private _chat: ChatService) {}
+  constructor(private _chat: ChatService, private _level: LevelingService, private utils: UtilService) {}
 
   ngAfterViewInit() {
     this.ModuleSpeech = new Speech();
-    this.toggleChatCloud();
+    this.showCloudText('Hello, I am Nora.');
+    this._level.___init___();
+    this._level.publicCurrentAI.subscribe((data) => {
+      if (this.nora.level < data['level']) {
+        this.showCloudText('yayy, I am leveling up!');
+      }
+      this.nora.level = data['level'];
+
+      this.nora.xp = data['xp'];
+      this.nora.mood = data['emotion'];
+    });
+
     this.changeAIEmotion('normal');
+  }
+
+  showCloudText(text) {
+    this.cloudDialogBox = text;
+    this.toggleChatCloud();
   }
 
   toggleChatCloud() {
     let that = this;
-    // this.loading = true;
-    setTimeout(function () {
-      that.aiChatCloud.nativeElement.classList.add('hide-opacity');
-      // that.loading = false;
-    }, 6000);
+    console.log(that.aiChatCloud.nativeElement.classList);
+    if (that.aiChatCloud.nativeElement.classList.length >= 2) {
+      that.aiChatCloud.nativeElement.classList.remove('hide-opacity');
+      setTimeout(function () {
+        that.aiChatCloud.nativeElement.classList.add('hide-opacity');
+      }, 5000);
+    } else {
+      setTimeout(function () {
+        that.aiChatCloud.nativeElement.classList.add('hide-opacity');
+      }, 5000);
+    }
   }
 
   speech = false;
@@ -80,32 +104,114 @@ export class AppComponent implements AfterViewInit {
       response: '',
     };
     if (value.length >= 1) {
+      that._level.addXp(5);
+
       this.chatObjects.push({
         type: 'user',
         message: value,
         date: new Date().getSeconds(),
       });
       this.loading = true;
-      this._chat.getChatResponse(value.toString()).subscribe(
-        (data) => {
-          setTimeout(function () {
-            console.log(data);
-            responseData.intent = data['data']['intent'];
-            that.checkIntent(responseData.intent);
-            responseData.response = data['data']['response'];
+      if (this.chatMode.banking.withdraw) {
+        if (this.TaskSequenceState.withdraw.current == 1) {
+          const checkNumberString = this.utils._checkIsPhoneNumber(value);
+          console.log(checkNumberString);
+          if (checkNumberString !== null && checkNumberString != 'INVALID') {
+            //right
             that.chatObjects.push({
               type: 'ai',
-              message: responseData.response,
+              message: 'Thank you!',
               date: new Date().getSeconds(),
             });
-            that.loading = false;
-          }, 1000);
-        },
-        (err) => {
-          this.loading = false;
-          console.log(err);
+            this.activateWithdrawSequence();
+          } else if (checkNumberString == 'INVALID') {
+            that.chatObjects.push({
+              type: 'ai',
+              message: 'The number is invalid, please try again.',
+              date: new Date().getSeconds(),
+            });
+          } else {
+            that.chatObjects.push({
+              type: 'ai',
+              message: 'Please enter the correct number.',
+              date: new Date().getSeconds(),
+            });
+          }
+        } else if (this.TaskSequenceState.withdraw.current == 2) {
+          that.chatObjects.push({
+            type: 'ai',
+            message: 'Your account have been confirmed, Now you can do bank transaction with this session.',
+            date: new Date().getSeconds(),
+          });
+          this.TaskSequenceState.withdraw.current = 0;
+          this.toggleMode('normal');
+          this.checkIntent('normal');
         }
-      );
+        this.loading = false;
+      } else if (this.chatMode.banking.deposit) {
+        if (this.TaskSequenceState.deposit.current == 1) {
+          const checkNumberString = this.utils._checkIsPhoneNumber(value);
+          console.log(checkNumberString);
+          if (checkNumberString !== null && checkNumberString != 'INVALID') {
+            //right
+            that.chatObjects.push({
+              type: 'ai',
+              message: 'Thank you!',
+              date: new Date().getSeconds(),
+            });
+            this.activateDepositSequence();
+          } else if (checkNumberString == 'INVALID') {
+            that.chatObjects.push({
+              type: 'ai',
+              message: 'The number is invalid, please try again.',
+              date: new Date().getSeconds(),
+            });
+          } else {
+            that.chatObjects.push({
+              type: 'ai',
+              message: 'Please enter the correct number.',
+              date: new Date().getSeconds(),
+            });
+          }
+        } else if (this.TaskSequenceState.deposit.current == 2) {
+          that.chatObjects.push({
+            type: 'ai',
+            message: 'Your account have been confirmed, Now you can do bank transaction with this session.',
+            date: new Date().getSeconds(),
+          });
+          this.TaskSequenceState.deposit.current = 0;
+          this.toggleMode('normal');
+          this.checkIntent('normal');
+        }
+        this.loading = false;
+      } else {
+        this._chat.getChatResponse(this._chat.processText(value).toString()).subscribe(
+          (data) => {
+            setTimeout(async function () {
+              console.log(data);
+              responseData.intent = data['data']['intent'];
+              responseData.response = data['data']['response'];
+              const formatResponse = await that.utils._action(responseData.response);
+              console.log(formatResponse);
+              if (formatResponse.action.type.toUpperCase() == 'LINK') {
+                window.open(formatResponse.action.link, '_blank');
+              }
+              that.chatObjects.push({
+                type: 'ai',
+                message: formatResponse.response,
+                date: new Date().getSeconds(),
+              });
+              that.loading = false;
+              that.checkIntent(responseData.intent);
+            }, 1000);
+          },
+          (err) => {
+            this.loading = false;
+            console.log(err);
+          }
+        );
+      }
+
       console.log(this.chatInput);
       if (!this.speech) {
         this.chatInput.nativeElement.value = '';
@@ -150,9 +256,9 @@ export class AppComponent implements AfterViewInit {
         this.toggleMode('normal');
         this.changeAIEmotion('happy');
         break;
-      case 'bad':
+      case 'normal':
         this.toggleMode('normal');
-        this.changeAIEmotion('angry');
+        this.changeAIEmotion('happy');
         break;
     }
   }
@@ -182,6 +288,7 @@ export class AppComponent implements AfterViewInit {
             checkIPO: false,
           },
         };
+        this.activateWithdrawSequence();
         break;
       case 'deposit':
         this.chatMode = {
@@ -194,6 +301,7 @@ export class AppComponent implements AfterViewInit {
             checkIPO: false,
           },
         };
+        this.activateDepositSequence();
         break;
       case 'checkBalance':
         this.chatMode = {
@@ -210,5 +318,60 @@ export class AppComponent implements AfterViewInit {
     }
     console.log(this.chatMode);
   }
-  activateWithdrawSequence() {}
+  TaskSequenceState = {
+    withdraw: {
+      current: 0,
+    },
+    deposit: {
+      current: 0,
+    },
+  };
+
+  activateWithdrawSequence() {
+    if (this.TaskSequenceState.withdraw.current == 0) {
+      this.chatObjects.push({
+        type: 'ai',
+        message: [
+          'Can you give me your mobile banking phone number?',
+          'I will be needing your mobile banking user phone number please.',
+        ][Math.floor(Math.random() * 1) + 0],
+        date: new Date().getSeconds(),
+      });
+      this.TaskSequenceState.withdraw.current = 1;
+    } else if (this.TaskSequenceState.withdraw.current == 1) {
+      this.chatObjects.push({
+        type: 'ai',
+        message: [
+          'Please enter the OTP from your phone to confirm your account for this session.',
+          'I have sent you an OTP to your phone to confirm your account for this session. ',
+        ][Math.floor(Math.random() * 1) + 0],
+        date: new Date().getSeconds(),
+      });
+      this.TaskSequenceState.withdraw.current = 2;
+    }
+  }
+
+  activateDepositSequence() {
+    if (this.TaskSequenceState.deposit.current == 0) {
+      this.chatObjects.push({
+        type: 'ai',
+        message: [
+          'Since you are performing a bank transaction, i will need your phone number.',
+          'I will be needing your banking user phone number please.',
+        ][Math.floor(Math.random() * 1) + 0],
+        date: new Date().getSeconds(),
+      });
+      this.TaskSequenceState.deposit.current = 1;
+    } else if (this.TaskSequenceState.deposit.current == 1) {
+      this.chatObjects.push({
+        type: 'ai',
+        message: [
+          'Please enter the OTP from your phone to confirm your account for this session.',
+          'I have sent you an OTP to your phone to confirm your account for this session. ',
+        ][Math.floor(Math.random() * 1) + 0],
+        date: new Date().getSeconds(),
+      });
+      this.TaskSequenceState.deposit.current = 2;
+    }
+  }
 }
