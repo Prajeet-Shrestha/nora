@@ -22,10 +22,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 class Chat(Resource):
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()
-        self.intents = json.loads(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/intents.json').read())
-        self.words = pickle.load(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/words.pkl', 'rb'))
-        self.classes = pickle.load(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/classes.pkl', 'rb'))
-        self.model = load_model('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/nora_model.h5')
+        self.intents = json.loads(open('static/intents.json').read())
+        self.words = pickle.load(open('static/words.pkl', 'rb'))
+        self.classes = pickle.load(open('static/classes.pkl', 'rb'))
+        self.model = load_model('static/nora_model.h5')
 
     def clean_up_sentence(self, sentence):
         sentence_words = nltk.word_tokenize(sentence)
@@ -54,7 +54,6 @@ class Chat(Resource):
 
     def get_response(self, intents_list, intents_json):
         tag = intents_list[0]['intent']
-        result = ''
         list_of_intents = intents_json['intents']
         for i in list_of_intents:
             if i['tag'] == tag:
@@ -65,9 +64,6 @@ class Chat(Resource):
     def post(self):
         content = request.json
         message = content['message']
-
-        print(message)
-
         ints = self.predict_class(message)
         res = self.get_response(ints, self.intents)
         return jsonify({
@@ -84,9 +80,9 @@ class AddWithdraw(Resource):
     def post(self):
         try:
             content = request.json
-            assert re.match("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", content['phoneno'])
+            assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose'] > 0) and not content['purpose'].isspace()
+            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.withdraws.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
@@ -120,16 +116,15 @@ class AddWithdraw(Resource):
 
 class AddDeposit(Resource):
     def __init__(self):
-        # //Note: name line change
         self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
         self.db = self.client.noradb
 
     def post(self):
         try:
             content = request.json
-            assert re.match("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$", content['phoneno'])
+            assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose'] > 0) and not content['purpose'].isspace()
+            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.deposits.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
