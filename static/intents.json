@@ -147,6 +147,19 @@
         "Please provide me the details",
         "Okay. I will insert it to my database. Please provide me the details."
       ]
+    },
+    {
+      "tag": "task_checkBalance",
+      "patterns": [
+        "my balance", "check balance", "what balance", "my balance", "cash account", "money account", "current balance",
+        "how much money have", "whats in account", "how rich", "balance", "bank balance", "whats savings", "check balance",
+        "whats bank balance"
+      ],
+      "responses": [
+        "Ok. Please provide me your authentication details first.",
+        "I need to verify you first.",
+        "Understood. Kindly verify yourself, please."
+      ]
     }
   ]
 }

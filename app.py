@@ -72,6 +72,53 @@ class Chat(Resource):
             })
 
 
+class Authenticate(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        try:
+            content = request.json
+            assert re.match("^[0-9]{10}$", content['phoneno'])
+            result = self.db.users.find_one({
+                "phoneno": content['phoneno'],
+                "otp": content['otp']
+            })
+            if result:
+                return jsonify({
+                'status': 'success',
+                'data': {
+                    'task': 'authenticate',
+                    'message': 'User is authenticated'
+                    }
+                })
+            else:
+                return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'authenticate',
+                    'message': 'User is not authenticated'
+                    }
+                })
+        except AssertionError:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'authenticate',
+                    'message': 'Invalid data'
+                }
+            })
+        except:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'authenticate',
+                    'message': 'Network error'
+                    }
+                })
+
+
 class AddWithdraw(Resource):
     def __init__(self):
         self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
@@ -89,6 +136,10 @@ class AddWithdraw(Resource):
                         "date": datetime.datetime.now(),
                         "purpose": content['purpose']
                     })
+            self.db.users.update_one(
+                {"phoneno": content['phoneno']},
+                {"$inc": {"balance": -1 * content['amount']}}
+            )
             return jsonify({
                 'status': 'success',
                 'data': {
@@ -131,6 +182,10 @@ class AddDeposit(Resource):
                         "date": datetime.datetime.now(),
                         "purpose": content['purpose']
                     })
+            self.db.users.update_one(
+                {"phoneno": content['phoneno']},
+                {"$inc": {"balance": content['amount']}}
+            )
             return jsonify({
                 'status': 'success',
                 'data': {
@@ -155,10 +210,51 @@ class AddDeposit(Resource):
                 }
             })
 
+
+class CheckBalance(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        try:
+            content = request.json
+            assert re.match("^[0-9]{10}$", content['phoneno'])
+            result = self.db.users.find_one({
+                "phoneno": content['phoneno']
+            })
+            return jsonify({
+                'status': 'success',
+                "data": {
+                    'task': 'check_balance',
+                    'balance': result['balance'],
+                    'message': 'Balance retreived'
+                }
+            })
+        except AssertionError:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'check_balance',
+                    'balance': None,
+                    'message': 'Invalid data'
+                }
+            })
+        except:
+            return jsonify({
+                'status': 'failure',
+                'data': {
+                    'task': 'add_deposit',
+                    'balance': None,
+                    'message': 'Network error'
+                }
+            })
    
 api.add_resource(Chat, "/chat")
-api.add_resource(AddWithdraw, "/addwithdraw")
-api.add_resource(AddDeposit, "/adddeposit")
+api.add_resource(Authenticate, "/authenticate")
+api.add_resource(AddWithdraw, "/add_withdraw")
+api.add_resource(AddDeposit, "/add_deposit")
+api.add_resource(CheckBalance, "/check_balance")
 
 
 if __name__ == '__main__':
