@@ -66,16 +66,19 @@
     },
     {
       "tag": "chat_greetingsQuestion_happy",
-      "patterns": ["How are you today?", "How are you feeling?", "What are you feeling?"],
+      "patterns": ["How are you today", "How are you feeling", "What are you feeling", "How you doing",
+        "Hope doing great", "How life going"],
       "responses": [
         "I am doing great. How are you today?",
         "I am feeling great.",
-        "I am good thank you for your kind gesture, how are you today?"
+        "I am good thank you for your kind gesture, how are you today?",
+        "Never been better."
       ]
     },
     {
       "tag": "chat_questionAboutAiWork_normal",
-      "patterns": ["what can you do", "what is your purpose", "what are you doing", "how do you work"],
+      "patterns": ["what can you do", "what is your purpose", "what are you doing", "how do you work", "how can you help me", "how can you assist me", 
+        "assist help me", "why use you", " get benefit from you"],
       "responses": [
         "I am an AI for assisting you in banking transaction and any help you need.",
         "I was created by team of 3 people to help mankind to be more efficient in banking service and transaction ",
@@ -92,12 +95,20 @@
       ]
     },
     {
-      "tag": "chat_question_suggestions",
+      "tag": "chat_questionSaving_suggestions",
       "patterns": ["how can save money", "wasting too much money", "i am broke", "broke", "don't have much money"],
       "responses": [
         "Sometimes the hardest thing about saving money is just getting started. Here's a good article on how you can save money (action)(link)https://www.vacu.org/learn/financial-management/saving-and-investing/10-tips-for-saving-money(/link)(/action)",
         "My secret of saving money is based on two principles. 1. Purchase/spend what is necessary and 2 most importantly purchase what you can Afford.",
         "Having a savings account in our bank let you save 5% every month. I have opened a new tab for your to see more about our policies (action)(link)https://www.civilbank.com.np/financial-information/interest-rates(/link)(/action)"
+      ]
+    },
+    {
+      "tag": "chat_questionInvest_suggestions",
+      "patterns": ["how invest money", "investment return", "need invest", "have too much money", "have huge money", "stock", "stock market", "trade"],
+      "responses": [
+        "Investing can be risky for new comers. Heres a great article to help you get started. (action)(link)https://www.nerdwallet.com/article/investing/stock-investing-tips(/link)(/action)",
+        "I can give you the best tip for investing. It's \"Do not invest money you need.\""
       ]
     },
     {
