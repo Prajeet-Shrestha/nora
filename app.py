@@ -187,4 +187,4 @@ api.add_resource(CheckBalance, "/check_balance")
 # api.add_resource(CheckBalance, "/intend")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
