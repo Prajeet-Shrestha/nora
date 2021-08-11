@@ -49,7 +49,7 @@
   <div class="container-mid">
     <div class="chatBox">
       <div class="chatPreviewBox">
-        <div *ngFor="let chat of chatObjects">
+        <div *ngFor="let chat of chatObjects; let i = index">
           <div *ngIf="chat.type == 'user'" class="user">
             <div class="messageBox">
               {{ chat.message }}
@@ -85,7 +85,13 @@
                 ></path>
               </svg>
             </div>
-            <div class="debugMode rateButtom">+</div>
+            <div class="debugMode rateButtom">
+              <div class="up" (click)="rateUp(i)">+</div>
+              <div class="down" (click)="rateDown(i)">-</div>
+              <div class="rateNumber" [ngClass]="{ green: chat.rate > 0, yellow: chat.rate == 0, red: chat.rate < 0 }">
+                {{ chat.rate }}
+              </div>
+            </div>
           </div>
         </div>
       </div>

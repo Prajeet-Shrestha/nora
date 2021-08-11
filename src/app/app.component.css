@@ -145,6 +145,7 @@ input::placeholder {
 
 .user .messageBox {
   position: relative;
+  width: fit-content;
   max-width: 40%;
   border-radius: 20px;
   background-color: rgb(51, 56, 114);
@@ -171,7 +172,7 @@ input::placeholder {
 
 .ai {
   /* background-color: olive; */
-  display: flex;
+
   padding: 8px 0px;
 
   padding-left: 10px;
@@ -179,6 +180,7 @@ input::placeholder {
 
 .ai .messageBox {
   position: relative;
+  width: fit-content;
   max-width: 40%;
   border-radius: 20px;
   background-color: rgb(51, 56, 114);
@@ -242,7 +244,7 @@ input::placeholder {
   width: 4px;
 }
 
-@-webkit-keyframes mercuryTypingAnimation {
+@keyframes mercuryTypingAnimation {
   0% {
     -webkit-transform: translateY(0px);
   }
@@ -264,8 +266,50 @@ input::placeholder {
   -webkit-animation-delay: 400ms;
 }
 
+.ai {
+  display: block;
+}
+
+.debugMode {
+  width: 60px;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  /* background-color: yellow; */
+  /* justify-content: space-evenly; */
+}
 .rateButtom {
+  cursor: pointer;
+
   font-size: 24px;
+  font-weight: bolder;
+  color: red;
+}
+
+.rateButtom div {
+  margin-right: 10px;
+}
+
+.rateButtom .up {
+  color: rgb(1, 211, 1);
+}
+
+.rateNumber {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: bolder;
+  color: red;
+}
+
+.red {
+  color: red;
+}
+.green {
+  color: rgb(1, 211, 1);
+}
+
+.yellow {
+  color: yellow;
 }
 
 @media only screen and (max-width: 600px) {

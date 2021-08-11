@@ -6,7 +6,30 @@ import { Injectable } from '@angular/core';
 export class UtilService {
   constructor() {}
 
-  _authenticator() {}
+  IsAuthenticated(): boolean {
+    const user = this.getLocalStorage('user');
+    if (user) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  setLocalStorage(key, obj) {
+    localStorage.setItem(key, JSON.stringify(obj));
+  }
+
+  getLocalStorage(key) {
+    return JSON.parse(localStorage.getItem(key));
+  }
+
+  setUserInLocalStorage(userphone, otp) {
+    const user = {
+      phone: userphone,
+      otp: otp,
+    };
+    this.setLocalStorage('user', user);
+  }
 
   async _action(aiMessage) {
     let returnValue = {
@@ -55,5 +78,29 @@ export class UtilService {
     });
     console.log('FOUND NUMBER', parsedNumber);
     return parsedNumber.length >= 1 ? (isValid ? parsedNumber : 'INVALID') : null;
+  }
+
+  findMoneyInText(text) {
+    console.log(text);
+    let exp = text.match(/([0-9]*)/g);
+    let returnVal = 0;
+    exp.map((data) => {
+      if (data.length >= 1) {
+        returnVal = parseFloat(data);
+      }
+    });
+    return returnVal;
+  }
+
+  findPinCodeInText(text) {
+    console.log(text);
+    let exp = text.match(/([0-9]*)/g);
+    let returnVal = 0;
+    exp.map((data) => {
+      if (data.length <= 4 && data.length >= 0) {
+        returnVal = parseFloat(data);
+      }
+    });
+    return returnVal;
   }
 }
