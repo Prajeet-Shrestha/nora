@@ -108,7 +108,6 @@ class AddWithdraw(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.withdraws.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
@@ -138,7 +137,6 @@ class AddDeposit(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.deposits.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
