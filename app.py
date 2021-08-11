@@ -92,6 +92,7 @@ class Authenticate(Resource):
                     'task': 'authenticate',
                     'message': 'User is authenticated'
                     }
+                    
                 })
             else:
                 return jsonify({
@@ -249,13 +250,40 @@ class CheckBalance(Resource):
                     'message': 'Network error'
                 }
             })
-   
+
+
+# examplePayload_Chat = {
+#     message:''
+# }
+
+# examplePayload_auth = {
+#     phoneno:''
+#     otp:''
+# }
+
+# examplePayload_withdraw = {
+#     phoneno:'',
+#     amount:'', # float 
+#     purpose: "" # payment remarks 
+# }
+
+# examplePayload_deposit = {
+#       phoneno:'',
+#       amount:'', # float 
+#       purpose: "" # payment remarks 
+# }
+
+# examplePayload_checkbalance = {
+#     phoneno:''
+# }
+
 api.add_resource(Chat, "/chat")
 api.add_resource(Authenticate, "/authenticate")
 api.add_resource(AddWithdraw, "/add_withdraw")
 api.add_resource(AddDeposit, "/add_deposit")
 api.add_resource(CheckBalance, "/check_balance")
 
+# api.add_resource(CheckBalance, "/intend")
 
 if __name__ == '__main__':
     app.run(debug=True)
