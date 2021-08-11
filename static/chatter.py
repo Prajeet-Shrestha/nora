@@ -8,7 +8,7 @@ import tensorflow as tf
 
 
 lemmatizer = WordNetLemmatizer()
-intents = json.loads(open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/intents.json').read())
+intents = json.loads(open('/home/saugat/miniproject/backend/nora/static/intents.json').read())
 
 words = []
 classes = []
@@ -28,8 +28,8 @@ words = [lemmatizer.lemmatize(word) for word in words if word not in ignore_lett
 words = sorted(set(words))
 classes = sorted(set(classes))
 
-pickle.dump(words, open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/words.pkl', 'wb'))
-pickle.dump(classes, open('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/classes.pkl', 'wb'))
+pickle.dump(words, open('/home/saugat/miniproject/backend/nora/static/words.pkl', 'wb'))
+pickle.dump(classes, open('/home/saugat/miniproject/backend/nora/static/classes.pkl', 'wb'))
 
 training = []
 output_empty = [0] * len(classes)
@@ -63,4 +63,4 @@ adam = tf.keras.optimizers.SGD(lr=0.1)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=4, verbose=1)
-model.save('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/nora_model.h5', hist)
+model.save('/home/saugat/miniproject/backend/nora/static/nora_model.h5', hist)

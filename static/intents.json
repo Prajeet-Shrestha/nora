@@ -160,6 +160,46 @@
         "I need to verify you first.",
         "Understood. Kindly verify yourself, please."
       ]
+    },
+    {
+      "tag": "chat_questionDEMATintroduction",
+      "patterns": ["What is a DEMAT account","Define DEMAT account"],
+      "responses": ["It allows you to get involved in Stock market transactions","A Demat Account or Dematerialised Account provides the facility of holding shares and securities in an electronic format. "]
+    },
+    {
+      "tag": "chat_questionRegisternewaccount",
+      "patterns": ["How do i register for the bank account?","How to register a bank account?"],
+      "responses": ["Go to nearby bank and fill up a registration form","Ask for the registration Form in the nearby bank "]
+    },
+    {
+      "tag": "chat_questionMoney",
+      "patterns": ["How do I get all my money fom the bank?","Give me all my money from the bank?"],
+      "responses": ["For getting the cash on hand visit the nearby bank or ATM counter and do the necessary process.For digital money link your digital wallet to the ebanking application. "]
+    },
+    {
+      "tag": "chat_questionInterestsReceived",
+      "patterns": [" If and how much interest have I received?","Have I received any interest from the bank?"],
+      "responses": ["You will receive an interest of 5% of your available balance in your bank.","Calculate your monthly interests by a simple formula:InterestReceived=availableBalance+0.05*availableBalance "]
+    },
+    {
+      "tag": "chat_questionSecurity",
+      "patterns": [" Am i in risk of getting hacked?","Are my transactions secure?"],
+      "responses": ["We protect our customers information using uptodate security algorithms which requires Years to break.So hacking is almost impossible.","Don't worry! Your information are safe with us. "]
+    },
+    {
+      "tag": "chat_questionBestIntersetRate",
+      "patterns": [" bank providing the best interest rates?","your interest rates compared to other banks?"],
+      "responses": ["Our bank provides the best interest rates ","(action)(link)https://www.civilbank.com.np/financial-information/interest-rates(/link)(/action)"]
+    },
+    {
+      "tag": "chat_questionCreateDEMATaccount",
+      "patterns": ["How to create demat account? ","What are the procedure to create demat account?"],
+      "responses": ["Goby the nearest bank branch and fill up a KYC form.You can also download the KYC form from bank's website"]
+    },
+    {
+      "tag": "chat_questionGetrich",
+      "patterns": ["How to get rich? ","What are the procedure to get rich?"],
+      "responses": ["(action)(link)https://www.forbes.com/sites/melissahouston/2021/08/11/how-to-get-rich-from-absolutely-nothing/?sh=d6b7d7d53049(/link)(/action)"]
     }
   ]
 }
