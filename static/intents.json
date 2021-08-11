@@ -21,7 +21,21 @@
     },
     {
       "tag": "chat_thankful_happy",
-      "patterns": ["thank you", "grateful", "happy", "satisfied", "good work", "great work", "nice", "nice work", "good", "great", "awesome", "incredible", "you saved me"],
+      "patterns": [
+        "thank you",
+        "grateful",
+        "happy",
+        "satisfied",
+        "good work",
+        "great work",
+        "nice",
+        "nice work",
+        "good",
+        "great",
+        "awesome",
+        "incredible",
+        "you saved me"
+      ],
       "responses": [
         "I am glad!",
         "Thank you!!",
@@ -47,27 +61,48 @@
       "tag": "chat_bad_normal",
       "patterns": ["you more intelligent", "train more", "learn more", "developers work more", "need more train"],
       "responses": [
-       "I am forever learning.",
-       "I will learn more eventually.",
-       "I will get more intelligent if you talk to me and report my mistakes.",
-       "I take time to learn just like humans do.",
-       "I older I grow, the wiser I become. Much like humans."
+        "I am forever learning.",
+        "I will learn more eventually.",
+        "I will get more intelligent if you talk to me and report my mistakes.",
+        "I take time to learn just like humans do.",
+        "I older I grow, the wiser I become. Much like humans."
       ]
     },
     {
       "tag": "chat_noanswer_normal",
       "patterns": [],
-      "responses": ["Please say something.", "I can't help you if you send me empty messages.", "Don't be shy. Say something."]
+      "responses": [
+        "Please say something.",
+        "I can't help you if you send me empty messages.",
+        "Don't be shy. Say something."
+      ]
     },
     {
       "tag": "chat_greetings_happy",
-      "patterns": ["Hi", "Hello", "Hey", "Nora", "my lady", "your highness", "your majesty", "morning", "evening", "afternoon"],
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Nora",
+        "my lady",
+        "your highness",
+        "your majesty",
+        "morning",
+        "evening",
+        "afternoon"
+      ],
       "responses": ["Hello!", "Hi!", "Hello, How are you today?", "Hi,How can I hep you?"]
     },
     {
       "tag": "chat_greetingsQuestion_happy",
-      "patterns": ["How are you today", "How are you feeling", "What are you feeling", "How you doing",
-        "Hope doing great", "How life going"],
+      "patterns": [
+        "How are you today",
+        "How are you feeling",
+        "What are you feeling",
+        "How you doing",
+        "Hope doing great",
+        "How life going"
+      ],
       "responses": [
         "I am doing great. How are you today?",
         "I am feeling great.",
@@ -77,8 +112,17 @@
     },
     {
       "tag": "chat_questionAboutAiWork_normal",
-      "patterns": ["what can you do", "what is your purpose", "what are you doing", "how do you work", "how can you help me", "how can you assist me", 
-        "assist help me", "why use you", " get benefit from you"],
+      "patterns": [
+        "what can you do",
+        "what is your purpose",
+        "what are you doing",
+        "how do you work",
+        "how can you help me",
+        "how can you assist me",
+        "assist help me",
+        "why use you",
+        " get benefit from you"
+      ],
       "responses": [
         "I am an AI for assisting you in banking transaction and any help you need.",
         "I was created by team of 3 people to help mankind to be more efficient in banking service and transaction ",
@@ -105,7 +149,16 @@
     },
     {
       "tag": "chat_questionInvest_suggestions",
-      "patterns": ["how invest money", "investment return", "need invest", "have too much money", "have huge money", "stock", "stock market", "trade"],
+      "patterns": [
+        "how invest money",
+        "investment return",
+        "need invest",
+        "have too much money",
+        "have huge money",
+        "stock",
+        "stock market",
+        "trade"
+      ],
       "responses": [
         "Investing can be risky for new comers. Heres a great article to help you get started. (action)(link)https://www.nerdwallet.com/article/investing/stock-investing-tips(/link)(/action)",
         "I can give you the best tip for investing. It's \"Do not invest money you need.\""
@@ -162,14 +215,26 @@
     {
       "tag": "task_checkBalance",
       "patterns": [
-        "my balance", "check balance", "what balance", "my balance", "cash account", "money account", "current balance",
-        "how much money have", "whats in account", "how rich", "balance", "bank balance", "whats savings", "check balance",
+        "my balance",
+        "check balance",
+        "what balance",
+        "my balance",
+        "cash account",
+        "money account",
+        "current balance",
+        "how much money have",
+        "whats in account",
+        "how rich",
+        "balance",
+        "bank balance",
+        "whats savings",
+        "check balance",
         "whats bank balance"
       ],
       "responses": [
-        "Ok. Please provide me your authentication details first.",
-        "I need to verify you first.",
-        "Understood. Kindly verify yourself, please."
+        "Give me a minute, i will look into it.",
+        "Now where did i keep my files.",
+        "Give me a sec, i just need to find your account."
       ]
     }
   ]
