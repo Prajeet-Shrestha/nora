@@ -53,10 +53,10 @@ train_y = list(training[:, 1])
 
 
 model = tf.keras.Sequential()
-model.add(tf.keras.layers.Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(64, activation='relu'))
-model.add(tf.keras.layers.Dropout(0.5))
+model.add(tf.keras.layers.Dense(256, input_shape=(len(train_x[0]),)))
+model.add(tf.keras.layers.Dropout(0.2))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dropout(0.2))
 model.add(tf.keras.layers.Dense(len(train_y[0]), activation='softmax'))
 
 adam = tf.keras.optimizers.SGD(lr=0.1)
@@ -64,3 +64,5 @@ model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accurac
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=4, verbose=1)
 model.save('/home/saugat/miniproject/backend/nora/static/nora_model.h5', hist)
+#hist = model.fit(np.array(train_x), np.array(train_y), epochs=100, batch_size=4, verbose=1)
+#model.save('/home/toothlexx/Github_linked_projects/Mini-Projects/nora-backend/nora/static/nora_model.h5', hist)

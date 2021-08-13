@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, json, Response
 from flask_restful import Api, Resource
 from flask_cors import CORS, cross_origin
 import re
@@ -66,10 +66,8 @@ class Chat(Resource):
         message = content['message']
         ints = self.predict_class(message)
         res = self.get_response(ints, self.intents)
-        return jsonify({
-            'status': 'success',
-            'data': {'intent': res[0], 'response': res[1]}
-            })
+        data = {'status': 'success', 'data': {'intent': res[0], 'response': res[1]}}
+        return Response(json.dumps(data), status=200, mimetype='application/json')
 
 
 class Authenticate(Resource):
@@ -81,42 +79,23 @@ class Authenticate(Resource):
         try:
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
+            assert re.match("^[0-9]{4}$", content['otp'])
             result = self.db.users.find_one({
                 "phoneno": content['phoneno'],
                 "otp": content['otp']
             })
             if result:
-                return jsonify({
-                'status': 'success',
-                'data': {
-                    'task': 'authenticate',
-                    'message': 'User is authenticated'
-                    }
-                })
+                data = {'status': 'success', 'data': {'task': 'authenticate', 'message': 'User is authenticated'}}
+                return Response(json.dumps(data), status=200, mimetype='application/json')
             else:
-                return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'authenticate',
-                    'message': 'User is not authenticated'
-                    }
-                })
+                data = {'status': 'failure', 'data': {'task': 'authenticate', 'message': 'User is not authenticated'}}
+                return Response(json.dumps(data), status=403, mimetype='application/json')
         except AssertionError:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'authenticate',
-                    'message': 'Invalid data'
-                }
-            })
+            data = {'status': 'failure', 'data': { 'task': 'authenticate', 'message': 'Invalid data'}}
+            return Response(json.dumps(data), status=400, mimetype='application/json')
         except:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'authenticate',
-                    'message': 'Network error'
-                    }
-                })
+            data = {'status': 'failure','data': {'task': 'authenticate', 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 
 class AddWithdraw(Resource):
@@ -129,7 +108,6 @@ class AddWithdraw(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.withdraws.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
@@ -140,30 +118,14 @@ class AddWithdraw(Resource):
                 {"phoneno": content['phoneno']},
                 {"$inc": {"balance": -1 * content['amount']}}
             )
-            return jsonify({
-                'status': 'success',
-                'data': {
-                    'task': 'add_withdraw',
-                    'message': 'Data inserted to database'
-                }
-            })
+            data = {'status': 'success', 'data': {'task': 'add_withdraw', 'message': 'Data inserted to database'}}
+            return Response(json.dumps(data), status=201, mimetype='application/json')
         except AssertionError:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'add_withdraw',
-                    'message': 'Invalid data'
-                }
-            })
+            data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Invalid data'}}
+            return Response(json.dumps(data), status=400, mimetype='application/json')
         except Exception:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'add_withdraw',
-                    'message': 'Network error'
-                }
-            })
-
+            data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 class AddDeposit(Resource):
     def __init__(self):
@@ -175,7 +137,6 @@ class AddDeposit(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            assert len(content['purpose']) > 0 and not content['purpose'].isspace()
             self.db.deposits.insert_one({
                         "phoneno": content['phoneno'],
                         "amount": float(content['amount']),
@@ -186,30 +147,14 @@ class AddDeposit(Resource):
                 {"phoneno": content['phoneno']},
                 {"$inc": {"balance": content['amount']}}
             )
-            return jsonify({
-                'status': 'success',
-                'data': {
-                    'task': 'add_deposit',
-                    'message': 'Data inserted to database'
-                }
-            })
+            data = {'status': 'success','data': {'task': 'add_deposit', 'message': 'Data inserted to database'}}
+            return Response(json.dumps(data), status=201, mimetype='application/json')
         except AssertionError:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'add_deposit',
-                    'message': 'Invalid data'
-                }
-            })
+            data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Invalid data'}}
+            return Response(json.dumps(data), status=400, mimetype='application/json')
         except Exception:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'add_deposit',
-                    'message': 'Network error'
-                }
-            })
-
+            data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 class CheckBalance(Resource):
     def __init__(self):
@@ -223,39 +168,23 @@ class CheckBalance(Resource):
             result = self.db.users.find_one({
                 "phoneno": content['phoneno']
             })
-            return jsonify({
-                'status': 'success',
-                "data": {
-                    'task': 'check_balance',
-                    'balance': result['balance'],
-                    'message': 'Balance retreived'
-                }
-            })
+            data = {'status': 'success', 'data': {'task': 'check_balance', 'balance': result['balance'], 'message': 'Balance retreived'}}
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+
         except AssertionError:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'check_balance',
-                    'balance': None,
-                    'message': 'Invalid data'
-                }
-            })
+            data = {'status': 'failure', 'data': {'task': 'check_balance', 'balance': None, 'message': 'Invalid data'}}
+            return Response(json.dumps(data), status=400, mimetype='application/json')
         except:
-            return jsonify({
-                'status': 'failure',
-                'data': {
-                    'task': 'add_deposit',
-                    'balance': None,
-                    'message': 'Network error'
-                }
-            })
-   
+            data = {'status': 'failure','data': {'task': 'add_deposit', 'balance': None, 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
+
 api.add_resource(Chat, "/chat")
 api.add_resource(Authenticate, "/authenticate")
 api.add_resource(AddWithdraw, "/add_withdraw")
 api.add_resource(AddDeposit, "/add_deposit")
 api.add_resource(CheckBalance, "/check_balance")
 
+# api.add_resource(CheckBalance, "/intend")
 
 if __name__ == '__main__':
     app.run(debug=True)
