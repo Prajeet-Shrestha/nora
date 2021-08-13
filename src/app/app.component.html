@@ -48,7 +48,7 @@
   </div>
   <div class="container-mid">
     <div class="chatBox">
-      <div class="chatPreviewBox">
+      <div class="chatPreviewBox" id="chatPreviewBox">
         <div *ngFor="let chat of chatObjects; let i = index">
           <div *ngIf="chat.type == 'user'" class="user">
             <div class="messageBox">

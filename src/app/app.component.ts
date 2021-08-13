@@ -113,6 +113,8 @@ export class AppComponent implements AfterViewInit {
         date: new Date().getTime() / 1000,
         rate: 0,
       });
+      // prevBox.scrollTop = prevBox.scrollHeight;
+
       if (this.chatMode.banking.withdraw) {
         console.log('is authenticated', this.utils.IsAuthenticated());
         if (!this.utils.IsAuthenticated()) {
@@ -143,12 +145,19 @@ export class AppComponent implements AfterViewInit {
               if (formatResponse.action.type.toUpperCase() == 'LINK') {
                 window.open(formatResponse.action.link, '_blank');
               }
+
               that.chatObjects.push({
                 type: 'ai',
                 message: formatResponse.response,
                 date: new Date().getTime() / 1000,
                 rate: 0,
               });
+              let prevBox = document.getElementById('chatPreviewBox');
+              var xH = prevBox.scrollHeight;
+              prevBox.scrollTop = prevBox.scrollHeight;
+              console.log('ScrollTop:', prevBox.scrollTop);
+              console.log('ClientHeight:', prevBox.clientHeight);
+              console.log('ScrollHeight:', prevBox.scrollHeight);
               that.loading = false;
               that.checkIntent(responseData.intent, value);
             }, 1000);
