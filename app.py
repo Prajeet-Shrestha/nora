@@ -85,7 +85,7 @@ class Authenticate(Resource):
                 "otp": content['otp']
             })
             if result:
-                data = {'status': 'success', 'data': {'task': 'authenticate', 'message': 'User is authenticated'}}
+                data = {'status': 'success', 'data': {'task': 'authenticate', 'user': result, 'message': 'User is authenticated'}}
                 return Response(json.dumps(data), status=200, mimetype='application/json')
             else:
                 data = {'status': 'failure', 'data': {'task': 'authenticate', 'message': 'User is not authenticated'}}
@@ -108,18 +108,26 @@ class AddWithdraw(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            self.db.withdraws.insert_one({
-                        "phoneno": content['phoneno'],
-                        "amount": float(content['amount']),
-                        "date": datetime.datetime.now(),
-                        "purpose": content['purpose']
-                    })
-            self.db.users.update_one(
-                {"phoneno": content['phoneno']},
-                {"$inc": {"balance": -1 * content['amount']}}
-            )
-            data = {'status': 'success', 'data': {'task': 'add_withdraw', 'message': 'Data inserted to database'}}
-            return Response(json.dumps(data), status=201, mimetype='application/json')
+            check_otp = self.db.users.find_one({
+                "phoneno": content['phoneno'],
+                "otp": content['otp']
+            })
+            if check_otp:
+                self.db.withdraws.insert_one({
+                            "phoneno": content['phoneno'],
+                            "amount": float(content['amount']),
+                            "date": datetime.datetime.now(),
+                            "purpose": content['purpose']
+                        })
+                self.db.users.update_one(
+                    {"phoneno": content['phoneno']},
+                    {"$inc": {"balance": -1 * content['amount']}}
+                )
+                data = {'status': 'success', 'data': {'task': 'add_withdraw', 'message': 'Data inserted to database'}}
+                return Response(json.dumps(data), status=201, mimetype='application/json')
+            else:
+                data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'User not verified'}}
+                return Response(json.dumps(data), status=403, mimetype='application/json')
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
@@ -137,24 +145,90 @@ class AddDeposit(Resource):
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            self.db.deposits.insert_one({
-                        "phoneno": content['phoneno'],
-                        "amount": float(content['amount']),
-                        "date": datetime.datetime.now(),
-                        "purpose": content['purpose']
-                    })
-            self.db.users.update_one(
-                {"phoneno": content['phoneno']},
-                {"$inc": {"balance": content['amount']}}
-            )
-            data = {'status': 'success','data': {'task': 'add_deposit', 'message': 'Data inserted to database'}}
-            return Response(json.dumps(data), status=201, mimetype='application/json')
+            check_otp = self.db.users.find_one({
+                "phoneno": content['phoneno'],
+                "otp": content['otp']
+            })
+            if check_otp:
+                self.db.deposits.insert_one({
+                            "phoneno": content['phoneno'],
+                            "amount": float(content['amount']),
+                            "date": datetime.datetime.now(),
+                            "purpose": content['purpose']
+                        })
+                self.db.users.update_one(
+                    {"phoneno": content['phoneno']},
+                    {"$inc": {"balance": content['amount']}}
+                )
+                data = {'status': 'success','data': {'task': 'add_deposit', 'message': 'Data inserted to database'}}
+                return Response(json.dumps(data), status=201, mimetype='application/json')
+            else:
+                data = {'status': 'failure','data': {'task': 'add_deposit', 'message': 'User not verified'}}
+                return Response(json.dumps(data), status=403, mimetype='application/json')
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
         except Exception:
             data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Network error'}}
             return Response(json.dumps(data), status=504, mimetype='application/json')
+
+
+class TransferBalance(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        content = request.json
+
+        try:
+            assert re.match("^[0-9]{10}$", content['phoneno'])
+            assert isinstance(content['amount'], float)
+            assert re.match("^[0-9]{10}$", content['transferto'])
+
+            check_otp = self.db.users.find_one({
+                    "phoneno": content['phoneno'],
+                    "otp": content['otp']
+                })
+            
+            if check_otp:
+                # withdraw from transferer
+                self.db.withdraws.insert_one({
+                                "phoneno": content['phoneno'],
+                                "amount": float(content['amount']),
+                                "date": datetime.datetime.now(),
+                                "purpose": content['purpose']
+                            })
+                self.db.users.update_one(
+                    {"phoneno": content['phoneno']},
+                    {"$inc": {"balance": -1 * content['amount']}}
+                )
+
+                # deposit to the transfered to
+                self.db.deposits.insert_one({
+                                "phoneno": content['transferto'],
+                                "amount": float(content['amount']),
+                                "date": datetime.datetime.now(),
+                                "purpose": content['purpose']
+                            })
+                self.db.users.update_one(
+                    {"phoneno": content['transferto']},
+                    {"$inc": {"balance": content['amount']}}
+                )
+
+                data = {'status': 'success','data': {'task': 'transfer_balance', 'message': 'Data inserted to database'}}
+                return Response(json.dumps(data), status=201, mimetype='application/json')
+            else:
+                data = {'status': 'failure','data': {'task': 'transfer_balance', 'message': 'User not verified'}}
+                return Response(json.dumps(data), status=403, mimetype='application/json')
+        
+        except AssertionError:
+            data = {'status': 'failure', 'data': {'task': 'transfer_balance', 'message': 'Invalid data'}}
+            return Response(json.dumps(data), status=400, mimetype='application/json')
+        except Exception:
+            data = {'status': 'failure', 'data': {'task': 'transfer_balance', 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
+
 
 class CheckBalance(Resource):
     def __init__(self):
@@ -175,16 +249,35 @@ class CheckBalance(Resource):
             data = {'status': 'failure', 'data': {'task': 'check_balance', 'balance': None, 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
         except:
-            data = {'status': 'failure','data': {'task': 'add_deposit', 'balance': None, 'message': 'Network error'}}
+            data = {'status': 'failure','data': {'task': 'check_balance', 'balance': None, 'message': 'Network error'}}
             return Response(json.dumps(data), status=504, mimetype='application/json')
+
+
+class SaveChatLogs(Resource):
+    def __init__(self):
+        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+        self.db = self.client.noradb
+
+    def post(self):
+        try:
+            content = request.json
+            self.db.users.insert(content)
+            data = {'status': 'success', 'data': {'task': 'save_chat_logs', 'message': 'Chat log saved'}}
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+
+        except:
+            data = {'status': 'failure','data': {'task': 'save_chat_logs', 'message': 'Network error'}}
+            return Response(json.dumps(data), status=504, mimetype='application/json')
+
 
 api.add_resource(Chat, "/chat")
 api.add_resource(Authenticate, "/authenticate")
 api.add_resource(AddWithdraw, "/add_withdraw")
 api.add_resource(AddDeposit, "/add_deposit")
 api.add_resource(CheckBalance, "/check_balance")
+api.add_resource(TransferBalance, "/transfer_balance")
+api.add_resource(SaveChatLogs, "/save_chat_logs")
 
-# api.add_resource(CheckBalance, "/intend")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

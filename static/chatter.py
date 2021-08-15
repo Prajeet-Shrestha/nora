@@ -59,7 +59,7 @@ model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.2))
 model.add(tf.keras.layers.Dense(len(train_y[0]), activation='softmax'))
 
-adam = tf.keras.optimizers.SGD(lr=0.1)
+adam = tf.keras.optimizers.Adam(lr=0.0001)
 model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
 hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=4, verbose=1)
