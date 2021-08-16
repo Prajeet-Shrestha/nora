@@ -190,8 +190,12 @@ class TransferBalance(Resource):
                     "phoneno": content['phoneno'],
                     "otp": content['otp']
                 })
+
+            check_receiver = self.db.users.find_one({
+                "phoneno": content['transferto'],
+            })
             
-            if check_otp:
+            if check_otp and check_receiver:
                 # withdraw from transferer
                 self.db.withdraws.insert_one({
                                 "phoneno": content['phoneno'],
