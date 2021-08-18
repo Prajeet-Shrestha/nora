@@ -11,7 +11,6 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-from pymongo.errors import ConfigurationError
 
 
 app = Flask(__name__)
