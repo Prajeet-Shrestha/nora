@@ -11,12 +11,15 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
+from pymongo.errors import ConfigurationError
 
 
 app = Flask(__name__)
 api = Api(app)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
+db = client.noradb
 
 
 class Chat(Resource):
@@ -71,21 +74,27 @@ class Chat(Resource):
 
 
 class Authenticate(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
         try:
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert re.match("^[0-9]{4}$", content['otp'])
-            result = self.db.users.find_one({
+            result = db.users.find_one({
                 "phoneno": content['phoneno'],
                 "otp": content['otp']
             })
+            user = {
+                'phoneno': result['phoneno'],
+                'firstName': result['firstName'],
+                'middleName': result['middleName'],
+                'lastName': result['lastName'],
+                'age': result['age'],
+                'gender': result['gender'],
+                'address': result['address']
+            }
             if result:
-                data = {'status': 'success', 'data': {'task': 'authenticate', 'user': result, 'message': 'User is authenticated'}}
+                data = {'status': 'success', 'data': {'task': 'authenticate', 'user': user, 'message': 'User is authenticated'}}
+                print(data)
                 return Response(json.dumps(data), status=200, mimetype='application/json')
             else:
                 data = {'status': 'failure', 'data': {'task': 'authenticate', 'message': 'User is not authenticated'}}
@@ -93,33 +102,29 @@ class Authenticate(Resource):
         except AssertionError:
             data = {'status': 'failure', 'data': { 'task': 'authenticate', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
-        except:
-            data = {'status': 'failure','data': {'task': 'authenticate', 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 
 class AddWithdraw(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
         try:
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            check_otp = self.db.users.find_one({
+            check_otp = db.users.find_one({
                 "phoneno": content['phoneno'],
                 "otp": content['otp']
             })
             if check_otp:
-                self.db.withdraws.insert_one({
+                if check_otp['balance']<content['amount']:
+                    data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Balance not available'}}
+                    return Response(json.dumps(data), status=400, mimetype='application/json')
+                db.withdraws.insert_one({
                             "phoneno": content['phoneno'],
                             "amount": float(content['amount']),
                             "date": datetime.datetime.now(),
                             "purpose": content['purpose']
                         })
-                self.db.users.update_one(
+                db.users.update_one(
                     {"phoneno": content['phoneno']},
                     {"$inc": {"balance": -1 * content['amount']}}
                 )
@@ -131,32 +136,26 @@ class AddWithdraw(Resource):
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
-        except Exception:
-            data = {'status': 'failure', 'data': {'task': 'add_withdraw', 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
+
 
 class AddDeposit(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
         try:
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
-            check_otp = self.db.users.find_one({
+            check_otp = db.users.find_one({
                 "phoneno": content['phoneno'],
                 "otp": content['otp']
             })
             if check_otp:
-                self.db.deposits.insert_one({
+                db.deposits.insert_one({
                             "phoneno": content['phoneno'],
                             "amount": float(content['amount']),
                             "date": datetime.datetime.now(),
                             "purpose": content['purpose']
                         })
-                self.db.users.update_one(
+                db.users.update_one(
                     {"phoneno": content['phoneno']},
                     {"$inc": {"balance": content['amount']}}
                 )
@@ -168,54 +167,49 @@ class AddDeposit(Resource):
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
-        except Exception:
-            data = {'status': 'failure', 'data': {'task': 'add_deposit', 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 
 class TransferBalance(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
-        content = request.json
-
         try:
+            content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
             assert isinstance(content['amount'], float)
             assert re.match("^[0-9]{10}$", content['transferto'])
 
-            check_otp = self.db.users.find_one({
+            check_otp = db.users.find_one({
                     "phoneno": content['phoneno'],
                     "otp": content['otp']
                 })
 
-            check_receiver = self.db.users.find_one({
+            check_receiver = db.users.find_one({
                 "phoneno": content['transferto'],
             })
             
             if check_otp and check_receiver:
                 # withdraw from transferer
-                self.db.withdraws.insert_one({
+                if check_otp['balance']<content['amount']:
+                    data = {'status': 'failure', 'data': {'task': 'transfer_balance', 'message': 'Balance not available'}}
+                    return Response(json.dumps(data), status=400, mimetype='application/json')
+                db.withdraws.insert_one({
                                 "phoneno": content['phoneno'],
                                 "amount": float(content['amount']),
                                 "date": datetime.datetime.now(),
                                 "purpose": content['purpose']
                             })
-                self.db.users.update_one(
+                db.users.update_one(
                     {"phoneno": content['phoneno']},
                     {"$inc": {"balance": -1 * content['amount']}}
                 )
 
                 # deposit to the transfered to
-                self.db.deposits.insert_one({
+                db.deposits.insert_one({
                                 "phoneno": content['transferto'],
                                 "amount": float(content['amount']),
                                 "date": datetime.datetime.now(),
                                 "purpose": content['purpose']
                             })
-                self.db.users.update_one(
+                db.users.update_one(
                     {"phoneno": content['transferto']},
                     {"$inc": {"balance": content['amount']}}
                 )
@@ -229,21 +223,14 @@ class TransferBalance(Resource):
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'transfer_balance', 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
-        except Exception:
-            data = {'status': 'failure', 'data': {'task': 'transfer_balance', 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 
 class CheckBalance(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
         try:
             content = request.json
             assert re.match("^[0-9]{10}$", content['phoneno'])
-            result = self.db.users.find_one({
+            result = db.users.find_one({
                 "phoneno": content['phoneno']
             })
             data = {'status': 'success', 'data': {'task': 'check_balance', 'balance': result['balance'], 'message': 'Balance retreived'}}
@@ -252,34 +239,26 @@ class CheckBalance(Resource):
         except AssertionError:
             data = {'status': 'failure', 'data': {'task': 'check_balance', 'balance': None, 'message': 'Invalid data'}}
             return Response(json.dumps(data), status=400, mimetype='application/json')
-        except:
-            data = {'status': 'failure','data': {'task': 'check_balance', 'balance': None, 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
 
 
 class SaveChatLogs(Resource):
-    def __init__(self):
-        self.client = pymongo.MongoClient("mongodb+srv://Saahil:FXOVdWdoxMtSKp1f@cluster0.flbld.mongodb.net/noradb?retryWrites=true&w=majority")
-        self.db = self.client.noradb
-
     def post(self):
         try:
             content = request.json
-            self.db.users.insert(content)
+            db.users.insert(content)
             data = {'status': 'success', 'data': {'task': 'save_chat_logs', 'message': 'Chat log saved'}}
             return Response(json.dumps(data), status=200, mimetype='application/json')
-
         except:
-            data = {'status': 'failure','data': {'task': 'save_chat_logs', 'message': 'Network error'}}
-            return Response(json.dumps(data), status=504, mimetype='application/json')
+            data = {'status': 'failure', 'data': {'task': 'save_chat_logs', 'message': 'Error'}}
+            return Response(json.dumps(data), status=500, mimetype='application/json')
 
 
 api.add_resource(Chat, "/chat")
 api.add_resource(Authenticate, "/authenticate")
 api.add_resource(AddWithdraw, "/add_withdraw")
 api.add_resource(AddDeposit, "/add_deposit")
-api.add_resource(CheckBalance, "/check_balance")
 api.add_resource(TransferBalance, "/transfer_balance")
+api.add_resource(CheckBalance, "/check_balance")
 api.add_resource(SaveChatLogs, "/save_chat_logs")
 
 
