@@ -244,7 +244,7 @@ class SaveChatLogs(Resource):
     def post(self):
         try:
             content = request.json
-            db.users.insert(content)
+            db.chat_logs.insert(content)
             data = {'status': 'success', 'data': {'task': 'save_chat_logs', 'message': 'Chat log saved'}}
             return Response(json.dumps(data), status=200, mimetype='application/json')
         except:
