@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import Speech from './services/speech.js';
 import { ChatService } from '../app/services/chat/chat.service';
 import { LevelingService } from './services/leveling/leveling.service';
@@ -22,6 +22,15 @@ export class AppComponent implements AfterViewInit {
       {
         message: 'Please, Can you check my bank balance?',
       },
+      {
+        message: 'I want to transfer money to someone.',
+      },
+      {
+        message: 'I want to deposit Rs.1000 money on my bank.',
+      },
+      {
+        message: 'I want to withdraw Rs.100 money.',
+      },
     ],
     normalChat: [
       {
@@ -34,16 +43,10 @@ export class AppComponent implements AfterViewInit {
         message: 'What do you do?',
       },
       {
-        message: 'I want to transfer money to someone.',
+        message: 'I am so much losing money. :(',
       },
       {
-        message: 'I want to transfer money to someone.',
-      },
-      {
-        message: 'I want to transfer money to someone.',
-      },
-      {
-        message: 'I want to transfer money to someone.',
+        message: 'Can you find the nearest ATM near me?',
       },
     ],
   };
@@ -91,13 +94,12 @@ export class AppComponent implements AfterViewInit {
 
     this._level.___init___();
     this._level.publicCurrentAI.subscribe((data) => {
-      this.nora.level = data['level'];
-
-      this.nora.xp = data['xp'];
-      this.nora.mood = data['emotion'];
       if (this.nora.level < data['level']) {
         this.showCloudText('yayy, I am leveling up!');
       }
+      this.nora.level = data['level'];
+      this.nora.xp = data['xp'];
+      this.nora.mood = data['emotion'];
     });
     if (this.utils.IsAuthenticated()) {
       const user = this.utils.getLocalStorage('user');
@@ -115,7 +117,7 @@ export class AppComponent implements AfterViewInit {
           'Hello, I am Nora',
           'I am Nora, I hope you are taking good care of yourself.',
           'Hey there, I am Nora, How can i be of service?',
-        ][Math.floor(Math.random() * 1) + 3]
+        ][Math.floor(Math.random() * 3)]
       );
     }
     this.changeAIEmotion('normal');
@@ -152,6 +154,8 @@ export class AppComponent implements AfterViewInit {
   }
 
   @ViewChild('chatInput') chatInput;
+  @ViewChild('chatInput') consent;
+
   addUserMessage(value) {
     console.log(value);
     let that = this;
@@ -417,7 +421,9 @@ export class AppComponent implements AfterViewInit {
       this.chatObjects.push({
         type: 'ai',
         rate: 0,
-        message: ['Please enter the pin code.'][Math.floor(Math.random() * 1) + 0],
+        message: ['Please enter the pin code for confirming the transfer transaction..'][
+          Math.floor(Math.random() * 1) + 0
+        ],
         date: new Date().getTime() / 1000,
       });
       this.TaskSequenceState.transfer.task = 3;
@@ -494,6 +500,7 @@ export class AppComponent implements AfterViewInit {
                 rate: 0,
               });
               this.TaskSequenceState.transfer.task = 0;
+              this.checkbalance();
               this.toggleMode('normal');
               this.checkIntent('normal');
             },
@@ -520,7 +527,7 @@ export class AppComponent implements AfterViewInit {
           'How much would you want to withdraw from your bank?',
           'How much should i take out from bank?',
           'Thank you for using the service, how much should i withdraw?',
-        ][Math.floor(Math.random() * 1) + 2],
+        ][Math.floor(Math.random() * 3)],
         date: new Date().getTime() / 1000,
       });
       this.TaskSequenceState.withdraw.task = 1;
@@ -528,7 +535,9 @@ export class AppComponent implements AfterViewInit {
       this.chatObjects.push({
         type: 'ai',
         rate: 0,
-        message: ['Please enter the pin code.'][Math.floor(Math.random() * 1) + 0],
+        message: ['Please enter the pin code for confirming the withdrawal transaction.'][
+          Math.floor(Math.random() * 1) + 0
+        ],
         date: new Date().getTime() / 1000,
       });
       this.TaskSequenceState.withdraw.task = 2;
@@ -544,7 +553,7 @@ export class AppComponent implements AfterViewInit {
           'Please hand the cash to the slot. ',
           'Can you please put the cash on the slot below.',
           'I will be able to count the cash once you insert it in the slot.',
-        ][Math.floor(Math.random() * 1) + 2],
+        ][Math.floor(Math.random() * 3)],
         date: new Date().getTime() / 1000,
       });
       this.TaskSequenceState.deposit.task = 1;
@@ -552,7 +561,9 @@ export class AppComponent implements AfterViewInit {
       this.chatObjects.push({
         type: 'ai',
         rate: 0,
-        message: ['Please enter the pin code.'][Math.floor(Math.random() * 1) + 0],
+        message: ['Please enter the pin code for confirming the deposit transaction.'][
+          Math.floor(Math.random() * 1) + 0
+        ],
         date: new Date().getTime() / 1000,
       });
       this.TaskSequenceState.deposit.task = 2;
@@ -602,6 +613,7 @@ export class AppComponent implements AfterViewInit {
                 rate: 0,
               });
               this.TaskSequenceState.deposit.task = 0;
+              this.checkbalance();
               this.toggleMode('normal');
               this.checkIntent('normal');
             },
@@ -662,6 +674,7 @@ export class AppComponent implements AfterViewInit {
                 rate: 0,
               });
               this.TaskSequenceState.withdraw.task = 0;
+              this.checkbalance();
               this.toggleMode('normal');
               this.checkIntent('normal');
             },
@@ -914,18 +927,25 @@ export class AppComponent implements AfterViewInit {
     switch (objects[2]) {
       case 'happy':
         this.changeAIEmotion('happy');
+        this.nora.mood = 'happy';
         break;
       case 'sad':
         this.changeAIEmotion('sad');
+        this.nora.mood = 'sad';
         break;
       case 'angry':
         this.changeAIEmotion('angry');
+        this.nora.mood = 'angry';
         break;
       case 'shocked':
         this.changeAIEmotion('shocked');
+        this.nora.mood = 'shocked';
+
         break;
       default:
         this.changeAIEmotion('normal');
+        this.nora.mood = 'normal';
+
         break;
     }
   }
@@ -942,5 +962,27 @@ export class AppComponent implements AfterViewInit {
 
   sendUpFromHelper(value) {
     this.addUserMessage(value);
+  }
+  hadConsent = false;
+  consentToggle(event) {
+    console.log(event.target.checked);
+    this.hadConsent = event.target.checked;
+  }
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event) {
+    if (this.hadConsent) {
+      this._chat.saveLogs(this.chatObjects).subscribe((data) => {
+        console.log(data);
+      });
+    }
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event) {
+    if (this.hadConsent) {
+      this._chat.saveLogs(this.chatObjects).subscribe((data) => {
+        console.log(data);
+      });
+    }
   }
 }

@@ -36,6 +36,7 @@ export class ChatService {
     auth: 'http://127.0.0.1:5000/authenticate',
     withdraw: 'http://127.0.0.1:5000/add_withdraw',
     transfer: 'http://127.0.0.1:5000/transfer_balance',
+    saveLogs: 'http://127.0.0.1:5000/save_chat_logs',
   };
   getChatResponse(message) {
     return this._http.post(
@@ -105,5 +106,12 @@ export class ChatService {
   }
   intToFloat(num, decPlaces) {
     return num.toFixed(decPlaces);
+  }
+
+  saveLogs(data) {
+    const payLoad = {
+      chatLogs: data,
+    };
+    return this._http.post(this.url.saveLogs, payLoad, null);
   }
 }

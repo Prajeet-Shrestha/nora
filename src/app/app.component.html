@@ -105,6 +105,9 @@
         </div>
       </div>
     </div>
+    <div class="chatLog-consent">
+      Collect Information: <input #consent type="checkbox" (click)="consentToggle($event)" class="btn" />
+    </div>
   </div>
   <div class="container-mid">
     <div class="chatBox">
@@ -145,7 +148,7 @@
                 ></path>
               </svg>
             </div>
-            <div class="debugMode rateButtom">
+            <div *ngIf="hadConsent" class="debugMode rateButtom">
               <div class="up" (click)="rateUp(i)">+</div>
               <div class="down" (click)="rateDown(i)">-</div>
               <div class="rateNumber" [ngClass]="{ green: chat.rate > 0, yellow: chat.rate == 0, red: chat.rate < 0 }">

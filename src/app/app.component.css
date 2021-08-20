@@ -401,6 +401,41 @@ input::placeholder {
   color: yellow;
 }
 
+.chatLog-consent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgb(186, 186, 186);
+}
+
+.btn {
+  --color: rgb(122, 65, 255);
+
+  display: grid;
+  place-items: center;
+
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  border: solid 0.1rem var(--color);
+  width: 5ch;
+  border-radius: 15rem;
+  cursor: pointer;
+  transition: background 300ms;
+}
+.btn:after {
+  content: 'OFF';
+  color: var(--color);
+}
+
+.btn:checked {
+  background-color: var(--color);
+}
+
+.btn:checked:after {
+  content: 'ON';
+  color: #fff;
+}
+
 @media only screen and (max-width: 600px) {
   .container {
     display: block;
