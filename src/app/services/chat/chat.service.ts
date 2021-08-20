@@ -35,6 +35,7 @@ export class ChatService {
     check: 'http://127.0.0.1:5000/check_balance',
     auth: 'http://127.0.0.1:5000/authenticate',
     withdraw: 'http://127.0.0.1:5000/add_withdraw',
+    transfer: 'http://127.0.0.1:5000/transfer_balance',
   };
   getChatResponse(message) {
     return this._http.post(
@@ -46,23 +47,36 @@ export class ChatService {
     );
   }
 
-  chatTaskDeposit(phoneNumber: string, amount: number, purpose: string) {
+  chatTaskDeposit(phoneNumber: string, amount: number, purpose: string, pin) {
     const payload = {
       phoneno: phoneNumber,
       amount: amount + 0.2,
       purpose: purpose,
+      otp: pin,
     };
     return this._http.post(this.url.deposit, payload, null);
   }
 
-  chatTaskWithdraw(phoneNumber: string, amount: number, purpose: string) {
+  chatTaskWithdraw(phoneNumber: string, amount: number, purpose: string, pin) {
     const payload = {
       phoneno: phoneNumber,
       amount: amount + 0.2,
       purpose: purpose,
+      otp: pin,
     };
     console.log(payload);
     return this._http.post(this.url.withdraw, payload, null);
+  }
+  chatTaskTransfer(senderPhoneNumber: string, amount: number, recipient: any, pin) {
+    const payload = {
+      phoneno: senderPhoneNumber.toString(),
+      otp: pin,
+      amount: amount + 0.2,
+      transferto: recipient.toString(),
+      purpose: '',
+    };
+    console.log(payload);
+    return this._http.post(this.url.transfer, payload, null);
   }
 
   chatTaskAuth(OTP: string, phoneNumber: string) {
@@ -70,6 +84,7 @@ export class ChatService {
       phoneno: phoneNumber,
       otp: OTP,
     };
+    console.log(payload);
     return this._http.post(this.url.auth, payload, null);
   }
 
