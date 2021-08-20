@@ -23,11 +23,15 @@ export class UtilService {
     return JSON.parse(localStorage.getItem(key));
   }
 
-  setUserInLocalStorage(userphone, otp) {
+  setUserInLocalStorage(userphone, otp, data) {
     const user = {
       phone: userphone,
       otp: otp,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
     };
+    console.log(user);
     this.setLocalStorage('user', user);
   }
 
@@ -63,6 +67,7 @@ export class UtilService {
   }
 
   _checkIsPhoneNumber(number) {
+    console.log('check number', number);
     let parsedNumber = '';
     let isValid = false;
     let stringList = number.split(' ');
@@ -83,22 +88,26 @@ export class UtilService {
   findMoneyInText(text) {
     console.log(text);
     let exp = text.match(/([0-9]*)/g);
+    console.log(exp);
     let returnVal = 0;
     exp.map((data) => {
       if (data.length >= 1) {
         returnVal = parseFloat(data);
       }
     });
+    console.log(returnVal);
     return returnVal;
   }
 
   findPinCodeInText(text) {
     console.log(text);
     let exp = text.match(/([0-9]*)/g);
+    console.log(exp);
     let returnVal = 0;
     exp.map((data) => {
-      if (data.length <= 4 && data.length >= 0) {
-        returnVal = parseFloat(data);
+      if (data.length == 4) {
+        console.log('pin found', data, parseInt(data));
+        returnVal = data;
       }
     });
     return returnVal;
