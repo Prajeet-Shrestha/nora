@@ -318,6 +318,11 @@
       "responses": [
         "For loans you need to visit the bank in person and fill up personal identification forms and sign contracts. Go to bank with some collateral to take loans."
       ]
+    },
+    {
+      "tag": "chat_showNearbyATM_normal",
+      "patterns": ["nearest ATM", "find nearest ATM", "ATM near me", "close ATM", "closest ATM", "nearby ATM", "fastest way to ATM"],
+      "responses": ["Here's a map showing nearest ATM machines to you. (action)(link)https://www.google.com/maps/search/atm+near+me/(/link)(/action)"]
     }
   ]
 }
