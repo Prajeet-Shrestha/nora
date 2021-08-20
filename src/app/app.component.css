@@ -6,8 +6,9 @@
   /* background-color: rgb(16, 20, 47); */
   background-color: var(--leftNavBackground);
   color: white;
-  width: 310px;
+  width: 330px;
   min-height: 100vh;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -23,7 +24,7 @@
   width: fit-content;
   text-align: center;
   display: flex;
-
+  font-weight: bold;
   align-items: center;
   font-size: 12px;
   margin-top: 5px;
@@ -63,6 +64,65 @@
   -ms-transition: opacity 3s ease-in-out;
   -o-transition: opacity 3s ease-in-out;
   opacity: 0.8;
+}
+
+.conversation-helper {
+  margin-top: 5px;
+  border-radius: 10px;
+  padding: 10px 5px;
+  /* background-color: rgb(124, 124, 205); */
+  width: 100%;
+}
+
+.ch-dashboard {
+  margin-top: 65px;
+  width: 100%;
+
+  font-size: 16px;
+  justify-content: space-around;
+  /* background-color: violet; */
+  display: flex;
+}
+
+.ch-dashboard .Bchat,
+.ch-dashboard .Nchat {
+  color: grey;
+  cursor: pointer;
+}
+
+.ch-dashboard .Bchat.active,
+.ch-dashboard .Nchat.active {
+  color: white;
+  cursor: pointer;
+  border-bottom: 2px solid white;
+}
+
+.main-ch-box {
+  overflow-y: scroll;
+
+  max-height: 300px;
+  /* background-color: rgb(124, 124, 205); */
+  width: 100%;
+}
+.titlech {
+  border-bottom: 1px solid rgb(132, 132, 132);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 2px;
+}
+
+.titlech .text {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+.titlech .back {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  color: rgb(55, 55, 55);
 }
 
 .chatPointer {
@@ -184,6 +244,35 @@ input::placeholder {
   max-width: 40%;
   border-radius: 20px;
   background-color: rgb(51, 56, 114);
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 19px 11px;
+  color: rgb(255, 255, 255, 0.8) !important;
+  line-height: 1.25;
+}
+
+.conversation-helper .ai .messageBox {
+  position: relative;
+  width: fit-content;
+  max-width: 90%;
+  cursor: pointer;
+  border-radius: 20px;
+  background-color: rgb(51, 56, 114);
+  z-index: 1;
+  font-size: 14px;
+  padding: 10px 19px 11px;
+  color: rgb(255, 255, 255, 0.8) !important;
+  line-height: 1.25;
+}
+
+.conversation-helper .ai .messageBox:hover {
+  position: relative;
+  width: fit-content;
+  max-width: 90%;
+  cursor: pointer;
+  border-radius: 20px;
+  background-color: rgb(51, 56, 114);
+  box-shadow: 1px 1px 2px #2e3267, -1px -1px 2px #383e7d;
   z-index: 1;
   font-size: 14px;
   padding: 10px 19px 11px;

@@ -45,6 +45,66 @@
       </svg>
       {{ cloudDialogBox }}
     </div>
+    <div class="ch-dashboard">
+      <div
+        (click)="toggleChatHelper()"
+        class="Nchat"
+        [ngClass]="{ active: conversationHelper_state.normalChat == true }"
+      >
+        NORMAL CHAT
+      </div>
+      <div class="Bchat" (click)="toggleChatHelper()" [ngClass]="{ active: conversationHelper_state.bankChat == true }">
+        BANK CHAT
+      </div>
+    </div>
+    <div *ngIf="conversationHelper_state.bankChat" class="conversation-helper">
+      <div class="main-ch-box">
+        <div *ngFor="let chat of conversationHelper.bankChat; let i = index">
+          <div class="ai" (click)="sendUpFromHelper(chat.message)">
+            <div class="messageBox">
+              {{ chat.message }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 20"
+                width="24"
+                height="20"
+                fill="currentColor"
+                align="right"
+                class="aiPointer"
+              >
+                <path
+                  d="M11.92 16.062A19.91 19.91 0 0 1 0 20V0h20c0 7.668-.155 16.282 4 20-5.176-.054-9.12-1.727-12.08-3.938z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="conversationHelper_state.normalChat" class="conversation-helper">
+      <div class="main-ch-box">
+        <div *ngFor="let chat of conversationHelper.normalChat; let i = index">
+          <div class="ai" (click)="sendUpFromHelper(chat.message)">
+            <div class="messageBox">
+              {{ chat.message }}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 20"
+                width="24"
+                height="20"
+                fill="currentColor"
+                align="right"
+                class="aiPointer"
+              >
+                <path
+                  d="M11.92 16.062A19.91 19.91 0 0 1 0 20V0h20c0 7.668-.155 16.282 4 20-5.176-.054-9.12-1.727-12.08-3.938z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="container-mid">
     <div class="chatBox">
